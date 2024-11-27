@@ -1,13 +1,17 @@
-import multer from "multer";
-import { Router } from "express";
-import upload from "../middleware/fileUpload.js";
-import { UNEXPECTED_FILE_TYPE } from "../constants/file.js";
-import { fileController } from "../controllers/fileController.js";
+const multer = require("multer");
+const { Router } = require("express");
+const upload = require("../middleware/fileUpload.js");
+const { UNEXPECTED_FILE_TYPE } = require("../constants/file.js");
+const { fileController } = require("../controllers/fileController.js");
+const { imageResize } = require("../middleware/imageResize.js");
+const { isFilePresent } = require("../middleware/validators/isFilePresent.js");
+const authenticateJWT  = require("../middleware/authentication.js");
 
-export const fileRouter = Router();
+const fileRouter = Router();
 
 fileRouter.post(
   "/upload",
+  authenticateJWT,
   function (req, res, next) {
     upload(req, res, function (err) {
       if (err instanceof multer.MulterError) {
@@ -20,5 +24,9 @@ fileRouter.post(
     });
     next();
   },
-  fileController
+  fileController,
+  imageResize,
+  isFilePresent
 );
+
+module.exports = { fileRouter };

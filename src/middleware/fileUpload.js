@@ -1,7 +1,9 @@
-import multer from "multer";
-import path from "path";
-import { filterTypeValidator } from "../utils/fileTypeValidator.js";
-import { UNEXPECTED_FILE_TYPE } from "../constants/file.js";
+const multer = require("multer");
+const path = require("path");
+const { fileTypeValidator } = require("../utils/fileTypeValidator.js");
+const { UNEXPECTED_FILE_TYPE } = require("../constants/file.js");
+
+// storage configuration using multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
@@ -11,10 +13,11 @@ const storage = multer.diskStorage({
   },
 });
 
+// in multer we wrote how to upload the file, i.e where to store it and validate the file type.
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    const isFileTypeAllowed = filterTypeValidator(file);
+    const isFileTypeAllowed = fileTypeValidator(file);
     if (isFileTypeAllowed) {
       return cb(null, true);
     } else {
@@ -26,6 +29,6 @@ const upload = multer({
       );
     }
   },
-}).array("file", 1);
+}).array("file", 1); // here file is he form fill name coming from frontend thats why its written as file.
 
-export default upload;
+module.exports = upload;

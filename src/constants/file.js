@@ -3,4 +3,4 @@ const UNEXPECTED_FILE_TYPE = {
   message: "Only image file types is allowed.",
 };
 
-export { UNEXPECTED_FILE_TYPE };
+module.exports = { UNEXPECTED_FILE_TYPE };
